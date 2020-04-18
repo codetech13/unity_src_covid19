@@ -149,7 +149,7 @@ public class CountriesListPanel : MonoBehaviour
         FilterPanel.SetActive(true);
     }
 
-    public void ShowHidePanel()
+    public void HideFilterPanel()
     {
         FilterPanel.SetActive(false);
     }

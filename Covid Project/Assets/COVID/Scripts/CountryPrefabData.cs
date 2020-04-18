@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
+using System.IO;
+using System;
 
 public class CountryPrefabData : MonoBehaviour
 {
@@ -18,6 +20,9 @@ public class CountryPrefabData : MonoBehaviour
     private string countryName;
     public string CountryName { get => countryName; set => countryName = value; }
 
+    private string flagPath = "/Flag/";
+    public string FlagPathName { get => Application.persistentDataPath + flagPath; set => countryName = Application.persistentDataPath + value; }
+
     public void SetCountryData(string _countryName, string flagUrl, float totalCases, float totalDeaths)
     {
         CountryName = _countryName;
@@ -28,7 +33,14 @@ public class CountryPrefabData : MonoBehaviour
         totalDeathTxt.enabled = true;
         totalCaseTxt.text = totalCases.ToString();
         totalDeathTxt.text = totalDeaths.ToString();
-        StartCoroutine(DownloadFlagCoroutine(flagUrl));
+
+        byte[] bytes = loadImage(Application.persistentDataPath + _countryName);
+        if (bytes == null)
+        StartCoroutine(DownloadFlagCoroutine(flagUrl, _countryName));
+        else
+        {
+            UseSavedSprite(bytes);
+        }
 
         specificDataPlaceholder.enabled = false;
         specificDataTxt.enabled = false;
@@ -45,9 +57,15 @@ public class CountryPrefabData : MonoBehaviour
         specificDataTxt.enabled = true;
 
         countryNameTxt.text = _countryName;
-        StartCoroutine(DownloadFlagCoroutine(flagUrl));
+        byte[] bytes = loadImage(Application.persistentDataPath + _countryName);
+        if (bytes == null)
+            StartCoroutine(DownloadFlagCoroutine(flagUrl, _countryName));
+        else
+        {
+            UseSavedSprite(bytes);
+        }
 
-        switch(specificFilter)
+        switch (specificFilter)
         {
             case SpecificFilter.ACTIVE:
                 specificDataPlaceholder.text = "Active Cases";
@@ -87,7 +105,7 @@ public class CountryPrefabData : MonoBehaviour
 
     }
 
-    private IEnumerator DownloadFlagCoroutine(string url)
+    private IEnumerator DownloadFlagCoroutine(string url, string flagName)
     {
         UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(url);
         yield return webRequest.SendWebRequest();
@@ -108,7 +126,71 @@ public class CountryPrefabData : MonoBehaviour
             {
                 flag.sprite = sprite;
             }
+
+            SaveImage(Application.persistentDataPath + flagName, texture2d.EncodeToPNG());
         }
+    }
+
+
+
+    private void SaveImage(string path, byte[] imageBytes)
+    {
+        //Create Directory if it does not exist
+        if (!Directory.Exists(Path.GetDirectoryName(path)))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+        }
+
+        try
+        {
+            File.WriteAllBytes(path, imageBytes);
+            //Debug.Log("Saved Data to: " + path.Replace("/", "\\"));
+        }
+        catch (Exception e)
+        {
+            //Debug.LogWarning("Failed To Save Data to: " + path.Replace("/", "\\"));
+            //Debug.LogWarning("Error: " + e.Message);
+        }
+    }
+
+    private byte[] loadImage(string path)
+    {
+        byte[] dataByte = null;
+
+        //Exit if Directory or File does not exist
+        if (!Directory.Exists(Path.GetDirectoryName(path)))
+        {
+            //Debug.LogWarning("Directory does not exist");
+            return null;
+        }
+
+        if (!File.Exists(path))
+        {
+            //Debug.Log("File does not exist");
+            return null;
+        }
+
+        try
+        {
+            dataByte = File.ReadAllBytes(path);
+            //Debug.Log("Loaded Data from: " + path.Replace("/", "\\"));
+        }
+        catch (Exception e)
+        {
+            //Debug.LogWarning("Failed To Load Data from: " + path.Replace("/", "\\"));
+            //Debug.LogWarning("Error: " + e.Message);
+        }
+
+        return dataByte;
+    }
+
+    private void UseSavedSprite(byte[] bytes)
+    {
+
+        Texture2D texture = new Texture2D(1, 1);
+        texture.LoadImage(bytes);
+        flag.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        //Debug.Log("LOCALLY FETCHING");
     }
 
 }

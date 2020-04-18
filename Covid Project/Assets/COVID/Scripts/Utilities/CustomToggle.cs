@@ -40,7 +40,6 @@ public class CustomToggle : MonoBehaviour
     }
 
     public void RefreshView() {
-        Debug.Log("RefreshView");
         if (IsOn)
         {
             inactive.SetActive(false);
