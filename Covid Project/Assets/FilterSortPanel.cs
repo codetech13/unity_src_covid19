@@ -3,6 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum SpecificFilter
+{
+    ACTIVE,
+    CRITICAL,
+    DPMILLION,
+    CPMILLION,
+    RECOVERED,
+    TEST,
+    TPMILLION,
+    TODAYSCASE,
+    TODAYSDEATH
+}
+
 public class FilterSortPanel : MonoBehaviour
 {
     [SerializeField] CustomToggle sortTotalCase;
@@ -15,6 +28,7 @@ public class FilterSortPanel : MonoBehaviour
     [SerializeField] CustomToggle sortTest;
     [SerializeField] CustomToggle sortTPmillion;
     [SerializeField] CustomToggle sortTodaysCase;
+    [SerializeField] CustomToggle sortTodaysDeath;
 
     [SerializeField] CustomToggle[] toggles;
 
@@ -89,6 +103,13 @@ public class FilterSortPanel : MonoBehaviour
         sortTodaysCase.IsOn = true;
         sortTodaysCase.RefreshView();
     }
+    public void OnClickTodaysDeathToggle(CustomToggle _toggle)
+    {
+        DisableAllToggles(_toggle);
+
+        sortTodaysDeath.IsOn = true;
+        sortTodaysDeath.RefreshView();
+    }
 
     public void Confirm()
     {
@@ -103,42 +124,47 @@ public class FilterSortPanel : MonoBehaviour
         }
         else if (sortActive.IsOn)
         {
-            CountriesListPanel.instance.SetView(SortbyActive(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData));
+            CountriesListPanel.instance.SetView(SortbyActive(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData), SpecificFilter.ACTIVE);
 
         }
         else if (sortCritical.IsOn)
         {
-            CountriesListPanel.instance.SetView(SortbyCritical(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData));
+            CountriesListPanel.instance.SetView(SortbyCritical(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData), SpecificFilter.CRITICAL);
 
         }
         else if (sortDPmillion.IsOn)
         {
-            CountriesListPanel.instance.SetView(SortbyDeathsPerMillion(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData));
+            CountriesListPanel.instance.SetView(SortbyDeathsPerMillion(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData), SpecificFilter.DPMILLION);
 
         }
         else if (sortCPmillion.IsOn)
         {
-            CountriesListPanel.instance.SetView(SortbyCasesPerMillion(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData));
+            CountriesListPanel.instance.SetView(SortbyCasesPerMillion(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData), SpecificFilter.CPMILLION);
 
         }
         else if (sortRecoverd.IsOn)
         {
-            CountriesListPanel.instance.SetView(SortbyRecovered(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData));
+            CountriesListPanel.instance.SetView(SortbyRecovered(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData), SpecificFilter.RECOVERED);
 
         }
         else if (sortTest.IsOn)
         {
-            CountriesListPanel.instance.SetView(SortbyTest(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData));
+            CountriesListPanel.instance.SetView(SortbyTest(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData), SpecificFilter.TEST);
 
         }
         else if (sortTPmillion.IsOn)
         {
-            CountriesListPanel.instance.SetView(SortbyTestPerMillion(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData));
+            CountriesListPanel.instance.SetView(SortbyTestPerMillion(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData), SpecificFilter.TPMILLION);
 
         }
         else if (sortTodaysCase.IsOn)
         {
-            CountriesListPanel.instance.SetView(SortbyTodayCases(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData));
+            CountriesListPanel.instance.SetView(SortbyTodayCases(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData), SpecificFilter.TODAYSCASE);
+
+        }
+        else if (sortTodaysDeath.IsOn)
+        {
+            CountriesListPanel.instance.SetView(SortbyTodayDeaths(MainMenuPanel.instance.AllData.countryData.Count, MainMenuPanel.instance.AllData), SpecificFilter.TODAYSDEATH);
 
         }
     }
@@ -297,13 +323,6 @@ public class FilterSortPanel : MonoBehaviour
             dataItems = allCountryData.countryData.Count;
         }
         return dataItems;
-    }
-
-    private AllCountryData GetDataViaCountryName(string country, CountryList allCountryData)
-    {
-        AllCountryData countryData = null;
-        countryData = allCountryData.countryData.Find(x => x.country == country);
-        return countryData;
     }
     #endregion
 }

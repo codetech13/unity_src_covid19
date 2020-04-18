@@ -14,7 +14,6 @@ namespace Danish.Covid.API
         public string totalCasesAPI;
         public string allCountryAPI;
 
-
         [Header("Data Objects")]
         [SerializeField] private TotalCasesObject totalCases;
         [SerializeField] private CountryList allCountryData;
@@ -32,7 +31,7 @@ namespace Danish.Covid.API
         private void Start()
         {
             FetchTotalCases();
-            FetchCountryData();
+            //FetchCountryData();
             //Invoke("FetchMe", 5.0f);
             //DownloadDataFromWebPage();
         }
