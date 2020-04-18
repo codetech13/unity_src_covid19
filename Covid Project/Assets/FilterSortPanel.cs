@@ -34,7 +34,6 @@ public class FilterSortPanel : MonoBehaviour
 
     public void OnClickTotalCaseToggle(CustomToggle _toggle)
     {
-        Debug.Log("OnClickTotalCaseToggle");
         DisableAllToggles(_toggle);
 
         sortTotalCase.IsOn = true;
@@ -171,18 +170,15 @@ public class FilterSortPanel : MonoBehaviour
 
     void DisableAllToggles(CustomToggle _toggle)
     {
-        Debug.Log("DisableAllToggles");
         for (int i = 0; i < toggles.Length; i++)
         {
             if (_toggle != toggles[i])
             {
-                Debug.Log("if");
                 toggles[i].IsOn = false;
                 toggles[i].RefreshView();
             }
             else
             {
-                Debug.Log("else");
             }
         }
     }

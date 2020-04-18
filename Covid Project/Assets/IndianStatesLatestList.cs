@@ -6,7 +6,7 @@ using UnityEngine;
 public class IndianStatesLatestList : MonoBehaviour
 {
     [SerializeField] GameObject FilterPanel;
-    [SerializeField] IndianStatesDetailsPopUp detailsPopUp;
+    [SerializeField] FS_Animation_Panel detailsPopUp;
 
     [Header("Pregenrated GroupView Items")]
     [SerializeField] List<IndianStatesLatestPrefabData> listItemsPool;
@@ -56,6 +56,7 @@ public class IndianStatesLatestList : MonoBehaviour
             listItemsPool[i].SetStatesData(statesLatestData[i].Loc, "", statesLatestData[i].TotalConfirmed, statesLatestData[i].Deaths);
             allClildGO.Add(listItemsPool[i].gameObject);
         }
+        LoadingAnimator.instance.HideLoadingAnimation();
     }
 
     public void SetView(List<IndianStatesRegionalLatest> allStatesLatest, IndianStateSpeciifcFilter specificFilter)
@@ -117,13 +118,19 @@ public class IndianStatesLatestList : MonoBehaviour
 
     public void ShowLatestStateDetails(IndianStatesLatestPrefabData statesPrefabData)
     {
-        detailsPopUp.gameObject.SetActive(true);
-        detailsPopUp.SetView(GetDataViaStateName(statesPrefabData.StateName, MainMenuPanel.instance.indianStatesLatestData));
+        if (detailsPopUp != null)
+        {
+            detailsPopUp.ShowPanel(true, 8f, true, 2.5f);
+        }
+        detailsPopUp.GetComponent<IndianStatesDetailsPopUp>().SetView(GetDataViaStateName(statesPrefabData.StateName, MainMenuPanel.instance.indianStatesLatestData));
     }
 
     public void HideStateLatestPopUp()
     {
-        detailsPopUp.gameObject.SetActive(false);
+        if (detailsPopUp != null)
+        {
+            detailsPopUp.HidePanel(false, 4f, false, 1.5f);
+        }
     }
 
 

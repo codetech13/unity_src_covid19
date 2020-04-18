@@ -45,6 +45,8 @@ namespace Danish.Covid.API
             FetchCountryData();
             //Invoke("FetchMe", 5.0f);
             //DownloadDataFromWebPage();
+
+            Screen.fullScreen = true;
         }
 
         private void FetchMe()

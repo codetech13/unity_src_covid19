@@ -10,6 +10,7 @@ public class MainMenuPanel : MonoBehaviour
     [SerializeField] GameObject dataPanel;
     [SerializeField] GameObject listPanel;
     [SerializeField] GameObject indianStateListPanel;
+    [SerializeField] FS_Animation_Panel dataSourcePane;
 
     [SerializeField] UnityEngine.UI.Image flagImage;
 
@@ -31,6 +32,7 @@ public class MainMenuPanel : MonoBehaviour
         dataPanel.SetActive(false);
         listPanel.SetActive(true);
         indianStateListPanel.SetActive(false);
+        LoadingAnimator.instance.showLoadingAnimation();
         APIManager.instance.FetchDataFromAPI(APIManager.instance.allCountryAPI, SuccessCountryData, FailureCountryData);
     }
 
@@ -46,7 +48,24 @@ public class MainMenuPanel : MonoBehaviour
         dataPanel.SetActive(false);
         listPanel.SetActive(false);
         indianStateListPanel.SetActive(true);
+        LoadingAnimator.instance.showLoadingAnimation();
         APIManager.instance.FetchDataFromAPI(APIManager.instance.latestCountOfStates, OnSuccessIndiaLatestData, OnFailureIndiaLatestData);
+    }
+
+    public void ShowDataSourcePanel()
+    {
+        if (dataSourcePane != null)
+        {
+            dataSourcePane.ShowPanel(true, 8f, true, 2.5f);
+        }
+    }
+
+    public void HideDataSourcePanel()
+    {
+        if (dataSourcePane != null)
+        {
+            dataSourcePane.HidePanel(false, 4f, false, 1.5f);
+        }
     }
 
     private void SuccessCountryData(UnityEngine.Networking.UnityWebRequest webRequest)
@@ -59,6 +78,7 @@ public class MainMenuPanel : MonoBehaviour
         Debug.Log(jsonDataMe);
         AllData = JsonUtility.FromJson<CountryList>(jsonDataMe);
         CountriesListPanel.instance.SetView(AllData.countryData);
+
     }
 
     public void SetFlagOnMainMenu()

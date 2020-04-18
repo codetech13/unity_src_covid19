@@ -5,7 +5,7 @@ using UnityEngine;
 public class CountriesListPanel : MonoBehaviour
 {
     [SerializeField] GameObject FilterPanel;
-    [SerializeField] CountryDetailsPopUp detailsPopUp;
+    [SerializeField] FS_Animation_Panel detailsPopUp;
 
     [Header("Pregenrated GroupView Items")]
     [SerializeField] List<CountryPrefabData> listItemsPool;
@@ -55,6 +55,8 @@ public class CountriesListPanel : MonoBehaviour
             listItemsPool[i].SetCountryData(allCountryDatas[i].country, allCountryDatas[i].countryInfo.flag, allCountryDatas[i].cases, allCountryDatas[i].deaths);
             allClildGO.Add(listItemsPool[i].gameObject);
         }
+
+        LoadingAnimator.instance.HideLoadingAnimation();
     }
 
     public void SetView(List<AllCountryData> allCountryDatas, SpecificFilter specificFilter)
@@ -123,17 +125,25 @@ public class CountriesListPanel : MonoBehaviour
 
             allClildGO.Add(listItemsPool[i].gameObject);
         }
+        LoadingAnimator.instance.HideLoadingAnimation();
     }
 
     public void ShowCountryDetails(CountryPrefabData countryPrefabData)
     {
-        detailsPopUp.gameObject.SetActive(true);
-        detailsPopUp.SetView(GetDataViaCountryName(countryPrefabData.CountryName, MainMenuPanel.instance.AllData));
+
+        if (detailsPopUp != null)
+        {
+            detailsPopUp.ShowPanel(true, 8f, true, 2.5f);
+        }
+        detailsPopUp.GetComponent<CountryDetailsPopUp>().SetView(GetDataViaCountryName(countryPrefabData.CountryName, MainMenuPanel.instance.AllData));
     }
 
     public void HideCountryDetailsPopup()
     {
-        detailsPopUp.gameObject.SetActive(false);
+        if (detailsPopUp != null)
+        {
+            detailsPopUp.HidePanel(false, 4f, false, 1.5f);
+        }
     }
 
 

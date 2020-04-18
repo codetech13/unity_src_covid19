@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Danish.Covid.Utility;
 
 namespace Danish.Covid.Country
 {
@@ -18,6 +19,7 @@ namespace Danish.Covid.Country
         [SerializeField] TMPro.TMP_Text tests;
         [SerializeField] TMPro.TMP_Text tpMillion;
         [SerializeField] TMPro.TMP_Text affetecCountried;
+        [SerializeField] TMPro.TMP_Text lastUpdatedTxt;
 
         private void Start()
         {
@@ -39,6 +41,9 @@ namespace Danish.Covid.Country
             tests.text = _data.tests.ToString();
             tpMillion.text = _data.testsPerOneMillion.ToString();
             affetecCountried.text = _data.affectedCountries.ToString();
+
+            lastUpdatedTxt.text = "Last updated at : " + Utility.Utility.FromUnixTime(_data.updated).ToLongDateString();
+            
         }
 
 
