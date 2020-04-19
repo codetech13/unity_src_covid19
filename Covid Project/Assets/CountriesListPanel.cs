@@ -1,4 +1,5 @@
-﻿using Danish.Covid.Country;
+﻿using Danish.Covid.API;
+using Danish.Covid.Country;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -135,7 +136,7 @@ public class CountriesListPanel : MonoBehaviour
         {
             detailsPopUp.ShowPanel(true, 8f, true, 2.5f);
         }
-        detailsPopUp.GetComponent<CountryDetailsPopUp>().SetView(GetDataViaCountryName(countryPrefabData.CountryName, MainMenuPanel.instance.AllData));
+        detailsPopUp.GetComponent<CountryDetailsPopUp>().SetView(GetDataViaCountryName(countryPrefabData.CountryName, APIManager.instance.allCountryData));
     }
 
     public void HideCountryDetailsPopup()

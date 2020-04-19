@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using Danish.Covid.API;
+﻿using Danish.Covid.API;
 using Danish.Covid.Country;
-using System.Linq;
 using System.Collections;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class MainMenuPanel : MonoBehaviour
@@ -27,28 +27,51 @@ public class MainMenuPanel : MonoBehaviour
         instance = this;
     }
 
+    bool showingCPanel = false;
+
     public void ShowCountriesPanel()
     {
-        dataPanel.SetActive(false);
+        if (!showingCPanel)
+        {
+            LoadingAnimator.instance.showLoadingAnimation();
+            showingCPanel = true;
+            dataPanel.SetActive(false);
+            indianStateListPanel.SetActive(false);
+            Invoke("DelayedShowCountryList", 0.1f);
+        }
+    }
+
+    void DelayedShowCountryList()
+    {
         listPanel.SetActive(true);
-        indianStateListPanel.SetActive(false);
-        LoadingAnimator.instance.showLoadingAnimation();
         APIManager.instance.FetchDataFromAPI(APIManager.instance.allCountryAPI, SuccessCountryData, FailureCountryData);
     }
 
     public void ShowDataPanel()
     {
+        showingCPanel = false;
+        showIsPanel = false;
         dataPanel.SetActive(true);
         listPanel.SetActive(false);
         indianStateListPanel.SetActive(false);
     }
 
+    bool showIsPanel = false;
     public void ShowIndianStatesPanel()
     {
-        dataPanel.SetActive(false);
-        listPanel.SetActive(false);
+        if (!showIsPanel)
+        {
+            LoadingAnimator.instance.showLoadingAnimation();
+            showIsPanel = true;
+            dataPanel.SetActive(false);
+            listPanel.SetActive(false);
+            Invoke("DelayedShowStatePanel", 0.1f);
+        }
+    }
+
+    void DelayedShowStatePanel()
+    {
         indianStateListPanel.SetActive(true);
-        LoadingAnimator.instance.showLoadingAnimation();
         APIManager.instance.FetchDataFromAPI(APIManager.instance.latestCountOfStates, OnSuccessIndiaLatestData, OnFailureIndiaLatestData);
     }
 
@@ -75,10 +98,9 @@ public class MainMenuPanel : MonoBehaviour
         string jsonDataMe = data.Replace("long", "longme");
 
         jsonDataMe = "{ \"countryData\":" + jsonDataMe + "}";
-        Debug.Log(jsonDataMe);
+        //Debug.Log(jsonDataMe);
         AllData = JsonUtility.FromJson<CountryList>(jsonDataMe);
         CountriesListPanel.instance.SetView(AllData.countryData);
-
     }
 
     public void SetFlagOnMainMenu()

@@ -25,10 +25,12 @@ namespace Danish.Covid.Country
         {
             API.APIManager.instance.TotalCases += SetData;
             API.APIManager.instance.IndianStatesLatestCases += LatestStatesData;
+            LoadingAnimator.instance.showLoadingAnimation();
         }
 
         void SetData(TotalCasesObject _data)
         {
+            LoadingAnimator.instance.HideLoadingAnimation();
             cases.text = _data.cases.ToString();
             todayCases.text = _data.todayCases.ToString();
             death.text = _data.deaths.ToString();

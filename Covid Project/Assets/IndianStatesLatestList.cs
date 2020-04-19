@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Danish.Covid.API;
 using Danish.Covid.Country;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class IndianStatesLatestList : MonoBehaviour
 {
     [SerializeField] GameObject FilterPanel;
     [SerializeField] FS_Animation_Panel detailsPopUp;
+    [SerializeField] CountryPrefabData indiaData;
 
     [Header("Pregenrated GroupView Items")]
     [SerializeField] List<IndianStatesLatestPrefabData> listItemsPool;
@@ -28,6 +30,9 @@ public class IndianStatesLatestList : MonoBehaviour
     public void SetView(List<IndianStatesRegionalLatest> statesLatestData)
     {
         _allStatesLevel = statesLatestData;
+        AllCountryData _indiaData = APIManager.instance.GetDataViaCountryName("India");
+        indiaData.SetCountryData(_indiaData.country, _indiaData.countryInfo.flag, _indiaData.todayCases, _indiaData.todayDeaths);
+
         if (statesLatestData.Count > listItemsPool.Count)
         {
             int temp = (statesLatestData.Count - listItemsPool.Count) + 5;
@@ -62,6 +67,9 @@ public class IndianStatesLatestList : MonoBehaviour
     public void SetView(List<IndianStatesRegionalLatest> allStatesLatest, IndianStateSpeciifcFilter specificFilter)
     {
         _allStatesLevel = allStatesLatest;
+        AllCountryData _indiaData = APIManager.instance.GetDataViaCountryName("india");
+        indiaData.SetCountryData(_indiaData.country, _indiaData.countryInfo.flag, _indiaData.todayCases, _indiaData.todayDeaths);
+
         if (allStatesLatest.Count > listItemsPool.Count)
         {
             int temp = (allStatesLatest.Count - listItemsPool.Count) + 5;

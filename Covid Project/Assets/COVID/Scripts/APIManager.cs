@@ -25,7 +25,7 @@ namespace Danish.Covid.API
 
         [Header("Data Objects")]
         [SerializeField] private TotalCasesObject totalCases;
-        [SerializeField] private CountryList allCountryData;
+        public CountryList allCountryData;
         [SerializeField] private List<AllCountryData> allCountryDatas = new List<AllCountryData>();
 
         public UnityEngine.Events.UnityAction<TotalCasesObject> TotalCases;
